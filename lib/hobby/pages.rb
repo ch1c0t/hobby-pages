@@ -16,12 +16,7 @@ module Hobby
       if page = page_with_name(my[:name])
         render page
       else
-        response.status = 404
-        if not_found_page = page_with_name(404)
-          render not_found_page
-        else
-          'Not found.'
-        end
+        not_found
       end
     end
 
@@ -32,6 +27,15 @@ module Hobby
     def page_with_name name
       path_to_file = "#{@directory}/html/pages/#{name}.slim"
       Tilt.new path_to_file if File.exist? path_to_file
+    end
+
+    def not_found
+      if not_found_page = page_with_name(404)
+        response.status = 404
+        render not_found_page
+      else
+        super
+      end
     end
   end
 end
