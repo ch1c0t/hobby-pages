@@ -2,6 +2,7 @@ require_relative 'helper'
 
 require 'hobby/pages'
 require 'securerandom'
+require 'nokogiri'
 
 describe Hobby::Pages do
   before :all do
@@ -20,8 +21,9 @@ describe Hobby::Pages do
   it do
     conn = Excon.new 'unix:///', socket: @socket
 
-    body = conn.get(path: '/exist').body
-    expect(body).to eq '<p>some</p>'
+    doc = Nokogiri.HTML conn.get(path: '/exist').body
+    text = doc.at_css('p').text
+    expect(text).to eq 'some'
 
     body = conn.get(path: '/nonexist').body
     expect(body).to eq '404'
