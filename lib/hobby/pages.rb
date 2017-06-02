@@ -21,7 +21,18 @@ module Hobby
     end
 
     def render tilt_template
-      tilt_template.render self
+      if layout
+        layout.render self do
+          tilt_template.render self
+        end
+      else
+        tilt_template.render self
+      end
+    end
+
+    def layout
+      path_to_default_layout = "#{@directory}/html/layouts/default.slim"
+      Tilt.new path_to_default_layout if File.exist? path_to_default_layout
     end
 
     def page_with_name name
