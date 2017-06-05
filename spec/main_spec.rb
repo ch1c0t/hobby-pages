@@ -35,4 +35,15 @@ describe Hobby::Pages do
     expect(response.status).to eq 404
     expect(response.body).to eq '404'
   end
+
+  it 'support layouts with multiple content sections' do
+    response = @conn.get(path: '/with-head')
+    doc = Nokogiri.HTML response.body
+
+    text = doc.at_css('title').text
+    expect(text).to eq 'Head from with-head'
+
+    text = doc.at_css('p').text
+    expect(text).to eq 'main content'
+  end
 end

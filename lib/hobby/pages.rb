@@ -56,6 +56,12 @@ module Hobby
     end
 
     def get_content_for part
+      "Head from with-head" if part == :head
     end
+
+    def set_content_for part
+    end
+
+    alias content_for set_content_for
   end
 end
