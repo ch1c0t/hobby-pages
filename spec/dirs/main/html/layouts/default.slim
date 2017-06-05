@@ -1,7 +1,10 @@
 doctype 5
 html
   head
-    title Default layout
+    - if head = yield(:head)
+      = head
+    - else
+      title Default layout
 
   body
     == yield

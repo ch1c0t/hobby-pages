@@ -22,8 +22,12 @@ module Hobby
 
     def render tilt_template
       if layout
-        layout.render self do
-          tilt_template.render self
+        layout.render self do |part|
+          if part
+            get_content_for part
+          else
+            tilt_template.render self
+          end
         end
       else
         tilt_template.render self
@@ -49,6 +53,9 @@ module Hobby
       else
         super
       end
+    end
+
+    def get_content_for part
     end
   end
 end
