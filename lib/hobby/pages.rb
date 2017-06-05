@@ -31,8 +31,10 @@ module Hobby
     end
 
     def layout
-      path_to_default_layout = "#{@directory}/html/layouts/default.slim"
-      Tilt.new path_to_default_layout if File.exist? path_to_default_layout
+      @layout ||= begin
+        path_to_default_layout = "#{@directory}/html/layouts/default.slim"
+        Tilt.new path_to_default_layout if File.exist? path_to_default_layout
+      end
     end
 
     def page_with_name name
