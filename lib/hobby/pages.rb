@@ -8,30 +8,48 @@ module Hobby
 
     use Rack::ContentType, 'text/html'
 
+    attr_reader :name, :directory
     def initialize directory
       @directory = directory
     end
 
     get '/:name' do
       @name = my[:name]
+      page = Page.new self
 
-      if page = page_with_name(my[:name])
-        render page
+      if page.ok?
+        page.to_s
       else
         not_found
       end
     end
 
-    def render tilt_template
-      path_to_file = "#{@directory}/html/ruby/#{@name}.rb"
-      (instance_eval IO.read path_to_file) if File.exist? path_to_file
+    class Page
+      def initialize app
+        @app = app
+        name, directory, @layout = app.name, app.directory, app.layout
 
-      if layout
-        layout.render self do |part|
-          tilt_template.render self
+        template_file = "#{directory}/html/pages/#{name}.slim"
+        @template = Tilt.new template_file if File.exist? template_file
+
+        script_file = "#{directory}/html/ruby/#{name}.rb"
+        @script = IO.read script_file if File.exist? script_file
+      end
+
+      def ok?
+        @template
+      end
+
+      def to_s
+        @app.instance_eval @script if @script
+
+        if @layout
+          @layout.render @app do
+            @template.render @app
+          end
+        else
+          @template.render @app
         end
-      else
-        tilt_template.render self
       end
     end
 
@@ -42,20 +60,16 @@ module Hobby
       end
     end
 
-    def page_with_name name
-      path_to_file = "#{@directory}/html/pages/#{name}.slim"
-      if File.exist? path_to_file
-        @name = name
-        Tilt.new path_to_file
-      end
-    end
-
     def not_found
       response.status = 404
-      if not_found_page = page_with_name(404)
-        render not_found_page
+
+      name, @name = @name, '404'
+      page = Page.new self
+
+      if page.ok?
+        page.to_s
       else
-        "404. The page named '#{@name}' was not found."
+        "404. The page named '#{name}' was not found."
       end
     end
   end
