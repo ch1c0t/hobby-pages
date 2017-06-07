@@ -1,8 +1,8 @@
 doctype 5
 html
   head
-    - if head = yield(:head)
-      = head
+    - if @head
+      title= @head
     - else
       title Default layout
 

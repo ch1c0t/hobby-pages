@@ -21,13 +21,12 @@ module Hobby
     end
 
     def render tilt_template
+      path_to_file = "#{@directory}/html/ruby/#{@name}.rb"
+      (instance_eval IO.read path_to_file) if File.exist? path_to_file
+
       if layout
         layout.render self do |part|
-          if part
-            get_content_for part
-          else
-            tilt_template.render self
-          end
+          tilt_template.render self
         end
       else
         tilt_template.render self
@@ -42,6 +41,7 @@ module Hobby
     end
 
     def page_with_name name
+      @name = name
       path_to_file = "#{@directory}/html/pages/#{name}.slim"
       Tilt.new path_to_file if File.exist? path_to_file
     end
@@ -54,14 +54,5 @@ module Hobby
         super
       end
     end
-
-    def get_content_for part
-      "Head from with-head" if part == :head
-    end
-
-    def set_content_for part
-    end
-
-    alias content_for set_content_for
   end
 end
