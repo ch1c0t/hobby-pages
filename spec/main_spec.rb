@@ -33,7 +33,7 @@ describe Hobby::Pages do
     response = @conn.get(path: '/nonexist')
 
     expect(response.status).to eq 404
-    expect(response.body).to eq '404'
+    expect(response.body).to eq "404. The page named 'nonexist' was not found."
   end
 
   it 'support layouts with multiple content sections' do
