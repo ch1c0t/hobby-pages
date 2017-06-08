@@ -36,7 +36,7 @@ describe Hobby::Pages do
     expect(response.body).to eq "404. The page named 'nonexist' was not found."
   end
 
-  it 'support layouts with multiple content sections' do
+  it 'supports layouts with multiple content sections' do
     response = @conn.get(path: '/with-head')
     doc = Nokogiri.HTML response.body
 
