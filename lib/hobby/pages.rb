@@ -1,6 +1,7 @@
 require 'hobby'
 require 'tilt'
 require 'slim'
+require 'sass'
 
 module Hobby
   class Pages
@@ -34,6 +35,14 @@ module Hobby
 
         script_file = "#{directory}/html/ruby/#{name}.rb"
         @script = IO.read script_file if File.exist? script_file
+
+        style_file = "#{directory}/css/pages/#{name}.sass"
+        if File.exist? style_file
+          sass_string = IO.read style_file
+          load_path = "#{directory}/css/pages/#{name}"
+          css = Sass::Engine.new(sass_string, load_paths: [load_path]).render
+          @css_tag = "<style id='for_page_#{name}'>#{css}</style>"
+        end
       end
 
       def ok?
@@ -44,7 +53,7 @@ module Hobby
         @app.instance_eval @script if @script
 
         @layout.render @app do
-          @template.render @app
+          "#{@css_tag}\n#{@template.render @app}"
         end
       end
     end

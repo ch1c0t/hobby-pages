@@ -46,4 +46,12 @@ describe Hobby::Pages do
     text = doc.at_css('p').text
     expect(text).to eq 'main content'
   end
+
+  it 'creates pages with CSS when CSS was supplied' do
+    response = @conn.get path: '/with-css'
+    doc = Nokogiri.HTML response.body
+
+    text = doc.at_css('style#for_page_with-css').text
+    expect(text).to eq "input {\n  width: 100%; }\n"
+  end
 end

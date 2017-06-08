@@ -8,4 +8,5 @@ Gem::Specification.new do |g|
   g.add_dependency 'hobby', '>=0.0.8'
   g.add_dependency 'tilt'
   g.add_dependency 'slim'
+  g.add_dependency 'sass'
 end
