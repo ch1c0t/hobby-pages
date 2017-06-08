@@ -43,20 +43,18 @@ module Hobby
       def to_s
         @app.instance_eval @script if @script
 
-        if @layout
-          @layout.render @app do
-            @template.render @app
-          end
-        else
+        @layout.render @app do
           @template.render @app
         end
       end
     end
 
     def layout
-      @layout ||= begin
-        path_to_default_layout = "#{@directory}/html/layouts/default.slim"
-        Tilt.new path_to_default_layout if File.exist? path_to_default_layout
+      path_to_default_layout = "#{@directory}/html/layouts/default.slim"
+      if File.exist? path_to_default_layout
+        Tilt.new path_to_default_layout
+      else
+        fail "No layout was found at #{path_to_default_layout}"
       end
     end
 
