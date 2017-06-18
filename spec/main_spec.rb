@@ -54,4 +54,17 @@ describe Hobby::Pages do
     text = doc.at_css('style#for_page_with-css').text
     expect(text).to eq "input {\n  width: 100%; }\n"
   end
+
+  it 'creages pages with JS' do
+    response = @conn.get path: '/with-js'
+    doc = Nokogiri.HTML response.body
+
+    text = doc.at_css('script#js_for_page_with-js').text
+    expect(text).to eq <<~S
+      (function() {
+        alert('something');
+
+      }).call(this);
+    S
+  end
 end

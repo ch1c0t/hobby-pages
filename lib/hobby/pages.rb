@@ -2,6 +2,8 @@ require 'hobby'
 require 'tilt'
 require 'slim'
 require 'sass'
+require 'sprockets'
+require 'coffee-script'
 
 module Hobby
   class Pages
@@ -39,11 +41,17 @@ module Hobby
     class Directory
       def initialize root
         @root = root
+
+        @sprockets = Sprockets::Environment.new
+        @sprockets.append_path "#{root}/js"
+
         @pages = Dir["#{root}/html/pages/*.slim"].map do |path|
           page = Page.new path, self
           [page.name, page]
         end.to_h
       end
+
+      attr_reader :sprockets
 
       def to_s
         @root
@@ -84,13 +92,17 @@ module Hobby
             css = Sass::Engine.new(sass_string, load_paths: [load_path]).render
             @css_tag = "<style id='for_page_#{name}'>#{css}</style>"
           end
+
+          if js = directory.sprockets["pages/#{name}.js"]
+            @js_tag = "<script id='js_for_page_#{name}'>#{js}</script>"
+          end
         end
 
         def render app
           app.instance_eval @script if @script
 
           @layout.render app do
-            "#{@css_tag}\n#{@template.render app}"
+            "#{@css_tag}#{@js_tag}#{@template.render app}"
           end
         end
       end

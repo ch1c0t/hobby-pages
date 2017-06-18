@@ -9,4 +9,6 @@ Gem::Specification.new do |g|
   g.add_dependency 'tilt'
   g.add_dependency 'slim'
   g.add_dependency 'sass'
+  g.add_dependency 'sprockets'
+  g.add_dependency 'coffee-script'
 end
