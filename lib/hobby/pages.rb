@@ -16,6 +16,14 @@ module Hobby
       @directory = Directory.new directory
     end
 
+    get do
+      if page = @directory['index']
+        page.render self
+      else
+        not_found
+      end
+    end
+
     get '/:name' do
       @name = my[:name]
 

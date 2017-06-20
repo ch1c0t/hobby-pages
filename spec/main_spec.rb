@@ -67,4 +67,11 @@ describe Hobby::Pages do
       }).call(this);
     S
   end
+  it 'maps the index template to the root route' do
+    response = @conn.get(path: '/')
+    doc = Nokogiri.HTML response.body
+
+    text = doc.at_css('p').text
+    expect(text).to eq 'index template'
+  end
 end
