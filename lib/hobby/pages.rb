@@ -52,6 +52,11 @@ module Hobby
 
         @sprockets = Sprockets::Environment.new
         @sprockets.append_path "#{root}/js"
+        if defined? RailsAssets
+          RailsAssets.load_paths.each do |path|
+            @sprockets.append_path path
+          end
+        end
 
         @pages = Dir["#{root}/html/pages/*.slim"].map do |path|
           page = Page.new path, self
