@@ -46,6 +46,35 @@ module Hobby
       end
     end
 
+    def css_tag
+      @css_tag ||= if css
+                     "<style>#{css}</style>"
+                   else
+                     ''
+                   end
+    end
+
+    def js_tag
+      @js_tag ||= if js
+                    "<script>#{js}</script>"
+                  else
+                    ''
+                  end
+    end
+
+    def css
+      style_file = "#{directory}/css/pages/#{name}.sass"
+      if File.exist? style_file
+        sass_string = IO.read style_file
+        load_path = "#{directory}/css/pages/#{name}"
+        Sass::Engine.new(sass_string, load_paths: [load_path]).render
+      end
+    end
+
+    def js
+      directory.sprockets["pages/#{name}.js"]
+    end
+
     class Directory
       def initialize root
         @root = root
@@ -97,25 +126,13 @@ module Hobby
 
           script_file = "#{directory.to_s}/html/ruby/#{name}.rb"
           @script = IO.read script_file if File.exist? script_file
-
-          style_file = "#{directory.to_s}/css/pages/#{name}.sass"
-          if File.exist? style_file
-            sass_string = IO.read style_file
-            load_path = "#{directory.to_s}/css/pages/#{name}"
-            css = Sass::Engine.new(sass_string, load_paths: [load_path]).render
-            @css_tag = "<style id='for_page_#{name}'>#{css}</style>"
-          end
-
-          if js = directory.sprockets["pages/#{name}.js"]
-            @js_tag = "<script id='js_for_page_#{name}'>#{js}</script>"
-          end
         end
 
         def render app
           app.instance_eval @script if @script
 
           @layout.render app do
-            "#{@css_tag}#{@js_tag}#{@template.render app}"
+            @template.render app
           end
         end
       end

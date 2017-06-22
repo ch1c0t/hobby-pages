@@ -51,7 +51,7 @@ describe Hobby::Pages do
     response = @conn.get path: '/with-css'
     doc = Nokogiri.HTML response.body
 
-    text = doc.at_css('style#for_page_with-css').text
+    text = doc.at_css('style').text
     expect(text).to eq "input {\n  width: 100%; }\n"
   end
 
@@ -59,7 +59,7 @@ describe Hobby::Pages do
     response = @conn.get path: '/with-js'
     doc = Nokogiri.HTML response.body
 
-    text = doc.at_css('script#js_for_page_with-js').text
+    text = doc.at_css('script').text
     expect(text).to eq <<~S
       (function() {
         alert('something');
