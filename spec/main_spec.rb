@@ -59,14 +59,18 @@ describe Hobby::Pages do
     response = @conn.get path: '/with-js'
     doc = Nokogiri.HTML response.body
 
-    text = doc.at_css('script').text
-    expect(text).to eq <<~S
+    js_src = doc.at_css('script').attr :src
+    expect(js_src).to eq '/with-js.js'
+
+    response = @conn.get path: js_src
+    expect(response.body).to eq <<~S
       (function() {
         alert('something');
 
       }).call(this);
     S
   end
+
   it 'maps the index template to the root route' do
     response = @conn.get(path: '/')
     doc = Nokogiri.HTML response.body

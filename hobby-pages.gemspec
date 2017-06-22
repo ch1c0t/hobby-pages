@@ -5,7 +5,7 @@ Gem::Specification.new do |g|
   g.summary = 'A Hobby app to return a bunch of HTML pages from a directory.'
   g.authors = ['Anatoly Chernow']
 
-  g.add_dependency 'hobby', '>=0.0.8'
+  g.add_dependency 'hobby', '>=0.0.9'
   g.add_dependency 'tilt'
   g.add_dependency 'slim'
   g.add_dependency 'sass'

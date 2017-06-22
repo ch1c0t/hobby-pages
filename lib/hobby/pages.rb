@@ -54,14 +54,6 @@ module Hobby
                    end
     end
 
-    def js_tag
-      @js_tag ||= if js
-                    "<script>#{js}</script>"
-                  else
-                    ''
-                  end
-    end
-
     def css
       style_file = "#{directory}/css/pages/#{name}.sass"
       if File.exist? style_file
@@ -71,8 +63,21 @@ module Hobby
       end
     end
 
-    def js
+    def js_tag
+      @js_tag ||= if js_at_name(name)
+                    "<script src='#{env['SCRIPT_NAME']}/#{name}.js'></script>"
+                  else
+                    ''
+                  end
+    end
+
+    def js_at_name name
       directory.sprockets["pages/#{name}.js"]
+    end
+
+    get '/with-js.js' do
+      content_type :js
+      js_at_name 'with-js'
     end
 
     class Directory
