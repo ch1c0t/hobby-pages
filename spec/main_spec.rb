@@ -56,11 +56,11 @@ describe Hobby::Pages do
   end
 
   it 'creages pages with JS' do
-    response = @conn.get path: '/with-js'
+    response = @conn.get path: '/jspage'
     doc = Nokogiri.HTML response.body
 
     js_src = doc.at_css('script').attr :src
-    expect(js_src).to eq '/with-js.js'
+    expect(js_src).to eq '/jspage.js'
 
     response = @conn.get path: js_src
     expect(response.body).to eq <<~S

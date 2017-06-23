@@ -24,6 +24,11 @@ module Hobby
       end
     end
 
+    get '/:name.js' do
+      content_type :js
+      js_at_name my[:name]
+    end
+
     get '/:name' do
       @name = my[:name]
 
@@ -73,11 +78,6 @@ module Hobby
 
     def js_at_name name
       directory.sprockets["pages/#{name}.js"]
-    end
-
-    get '/with-js.js' do
-      content_type :js
-      js_at_name 'with-js'
     end
 
     class Directory
