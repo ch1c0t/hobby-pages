@@ -17,7 +17,9 @@ module Hobby
     end
 
     get do
-      if page = @directory['index']
+      @name = 'index'
+
+      if page = @directory[@name]
         page.render self
       else
         not_found
